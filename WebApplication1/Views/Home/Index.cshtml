@@ -1,0 +1,475 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 5rem 0;
+        border-radius: 25px;
+        margin-bottom: 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        font-weight: 400;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn-hero {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        border: none;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-hero-primary {
+        background: white;
+        color: #667eea;
+    }
+
+    .btn-hero-primary:hover {
+        background: #f8f9fa;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        color: #667eea;
+    }
+
+    .btn-hero-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .btn-hero-outline:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-3px);
+    }
+
+    .features-section {
+        padding: 4rem 0;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        transition: left 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .feature-card:hover::before {
+        left: 0;
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .feature-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .feature-description {
+        color: #7f8c8d;
+        line-height: 1.6;
+    }
+
+    .stats-section {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 4rem 0;
+        border-radius: 25px;
+        margin: 4rem 0;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .how-it-works {
+        padding: 4rem 0;
+        background: #f8f9fa;
+        border-radius: 25px;
+        margin: 4rem 0;
+    }
+
+    .step-card {
+        text-align: center;
+        padding: 2rem;
+        position: relative;
+    }
+
+    .step-number {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+    }
+
+    .step-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .step-description {
+        color: #7f8c8d;
+    }
+
+    .testimonials {
+        padding: 4rem 0;
+    }
+
+    .testimonial-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .testimonial-text {
+        font-style: italic;
+        color: #5d6d7e;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .testimonial-author {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .testimonial-role {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .cta-buttons {
+            justify-content: center;
+        }
+        
+        .btn-hero {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 hero-content">
+                <h1 class="hero-title">Revolutionary AI Skin Disease Detection</h1>
+                <p class="hero-subtitle">
+                    Get instant, accurate skin condition analysis powered by advanced artificial intelligence. 
+                    Upload an image and receive professional-grade insights in seconds.
+                </p>
+                <div class="cta-buttons">
+                    <a asp-controller="Prediction" asp-action="Index" class="btn btn-hero btn-hero-primary">
+                        <i class="fas fa-brain me-2"></i>Try AI Diagnosis
+                    </a>
+                    <a asp-controller="Chat" asp-action="Index" class="btn btn-hero btn-hero-outline">
+                        <i class="fas fa-robot me-2"></i>Chat with AI
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-microscope" style="font-size: 12rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-primary">Why Choose SkinDetect AI?</h2>
+            <p class="lead text-muted">Advanced technology meets healthcare accessibility</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Analysis</h3>
+                    <p class="feature-description">
+                        State-of-the-art deep learning models trained on thousands of dermatological images 
+                        provide accurate and reliable skin condition detection.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="feature-title">Instant Results</h3>
+                    <p class="feature-description">
+                        Get immediate analysis results in under 3 seconds. No waiting, no appointments needed. 
+                        Fast and efficient skin condition screening at your fingertips.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Privacy & Security</h3>
+                    <p class="feature-description">
+                        Your medical data is protected with enterprise-grade security. Images are processed 
+                        securely and never stored without your explicit consent.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3 class="feature-title">Professional Grade</h3>
+                    <p class="feature-description">
+                        Our AI model achieves 91.51% accuracy, matching dermatologist-level performance 
+                        for preliminary skin condition assessment.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Mobile Friendly</h3>
+                    <p class="feature-description">
+                        Access our platform from any device. Take photos with your smartphone 
+                        and get instant analysis anywhere, anytime.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Detailed Reports</h3>
+                    <p class="feature-description">
+                        Receive comprehensive analysis with confidence scores, recommendations, 
+                        and educational information about detected conditions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <span class="stat-number">91.51%</span>
+                    <span class="stat-label">Model Accuracy</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <span class="stat-number">30K+</span>
+                    <span class="stat-label">Training Images</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Disease Categories</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <span class="stat-number">&lt;3s</span>
+                    <span class="stat-label">Response Time</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-primary">How It Works</h2>
+            <p class="lead text-muted">Simple steps to get your skin analysis</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Upload Image</h4>
+                    <p class="step-description">
+                        Take or upload a clear photo of the skin area you want to analyze
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">AI Analysis</h4>
+                    <p class="step-description">
+                        Our advanced AI model processes your image using deep learning algorithms
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Get Results</h4>
+                    <p class="step-description">
+                        Receive detailed analysis with confidence scores and recommendations
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Take Action</h4>
+                    <p class="step-description">
+                        Use the insights to make informed decisions about seeking medical care
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- CTA Section -->
+<section class="hero-section" style="margin-top: 4rem;">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-3">Ready to Try SkinDetect AI?</h2>
+        <p class="lead mb-4">Join thousands of users who trust our AI for skin health insights</p>
+        <div class="cta-buttons">
+            <a asp-controller="Prediction" asp-action="Index" class="btn btn-hero btn-hero-primary">
+                <i class="fas fa-upload me-2"></i>Start Free Analysis
+            </a>
+            <a asp-controller="Home" asp-action="About" class="btn btn-hero btn-hero-outline">
+                <i class="fas fa-info-circle me-2"></i>Learn More
+            </a>
+        </div>
+    </div>
+</section>

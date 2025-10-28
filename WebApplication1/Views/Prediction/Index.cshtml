@@ -1,0 +1,488 @@
+@* filepath: e:\valeri project skin\web_project\WebApplication1\WebApplication1\Views\Prediction\Index.cshtml *@
+@{
+    ViewData["Title"] = "Skin Disease Prediction";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .main-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        margin: 2rem auto;
+        max-width: 1200px;
+    }
+
+    .upload-area {
+        border: 3px dashed #007bff;
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: linear-gradient(45deg, #f8f9ff, #e3f2fd);
+        cursor: pointer;
+    }
+
+    .upload-area:hover {
+        border-color: #0056b3;
+        background: linear-gradient(45deg, #e3f2fd, #f8f9ff);
+        transform: translateY(-2px);
+    }
+
+    .upload-area.dragover {
+        border-color: #28a745;
+        background: linear-gradient(45deg, #e8f5e8, #f0fff0);
+        transform: scale(1.02);
+    }
+
+    .preview-container {
+        display: none;
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .preview-image {
+        max-width: 100%;
+        max-height: 400px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .preview-image:hover {
+        transform: scale(1.05);
+    }
+
+    .prediction-results {
+        display: none;
+        margin-top: 2rem;
+    }
+
+    .result-card {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+    }
+
+    .confidence-bar {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        height: 30px;
+        margin: 0.5rem 0;
+        overflow: hidden;
+    }
+
+    .confidence-fill {
+        background: linear-gradient(90deg, #28a745, #20c997);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .all-predictions {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .prediction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem;
+        margin: 0.5rem 0;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .prediction-item:hover {
+        background: linear-gradient(90deg, #28a745, #20c997) !important;
+        color: white !important;
+        transform: translateX(10px);
+        border-color: #28a745;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .prediction-item.top-prediction {
+        background: linear-gradient(90deg, #28a745, #20c997);
+        color: white;
+        border-color: #28a745;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .prediction-item.top-prediction:hover {
+        background: linear-gradient(90deg, #198754, #17a2b8) !important;
+        transform: translateX(15px) scale(1.02);
+    }
+
+    .all-predictions h5 {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .prediction-item .prediction-name {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .prediction-item .prediction-confidence {
+        font-weight: 700;
+        font-size: 1.1rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        min-width: 60px;
+        text-align: center;
+    }
+
+    .prediction-item:not(.top-prediction) {
+        background: #f8f9fa;
+        color: #495057;
+    }
+
+    .prediction-item:not(.top-prediction) .prediction-confidence {
+        background: rgba(0, 0, 0, 0.1);
+        color: #495057;
+    }
+
+    .prediction-item:hover .prediction-confidence {
+        background: rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+    }
+
+    .confidence-bar {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        height: 35px;
+        margin: 1rem 0;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .confidence-fill {
+        background: linear-gradient(90deg, #28a745, #20c997);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1.5s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .disease-info {
+        background: rgba(255, 255, 255, 0.9);
+        color: #495057;
+        border-left: 4px solid #ffc107;
+        padding: 1.2rem;
+        margin-top: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .disease-info h6 {
+        color: #495057;
+        margin-bottom: 0.8rem;
+    }
+
+    /* Animation for prediction items */
+    @@keyframes slideInFromRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .prediction-item {
+        animation: slideInFromRight 0.5s ease-out;
+    }
+
+    .prediction-item:nth-child(2) { animation-delay: 0.1s; }
+    .prediction-item:nth-child(3) { animation-delay: 0.2s; }
+    .prediction-item:nth-child(4) { animation-delay: 0.3s; }
+    .prediction-item:nth-child(5) { animation-delay: 0.4s; }
+    .prediction-item:nth-child(6) { animation-delay: 0.5s; }
+</style>
+
+<div class="container-fluid p-4">
+    <div class="main-container p-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 text-primary mb-3">
+                <i class="fas fa-microscope me-3"></i>
+                Skin Disease Prediction System
+            </h1>
+            <p class="lead text-muted">Upload an image to get AI-powered skin condition analysis</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt fa-4x text-primary mb-3"></i>
+                    <h4>Drop your image here or click to browse</h4>
+                    <p class="text-muted">Supports JPG, PNG, BMP, GIF files</p>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    <button type="button" class="btn btn-primary mt-3" id="chooseFileBtn">
+                        <i class="fas fa-folder-open me-2"></i>Choose File
+                    </button>
+                </div>
+
+                <div class="preview-container" id="previewContainer">
+                    <img id="previewImage" class="preview-image" alt="Preview">
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-success btn-lg" id="predictBtn">
+                            <i class="fas fa-brain me-2"></i>Analyze Image
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary ms-2" id="clearBtn">
+                            <i class="fas fa-times me-2"></i>Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <h5>Analyzing your image...</h5>
+                    <p class="text-muted">This may take a few moments</p>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="prediction-results" id="predictionResults">
+                    <div class="result-card">
+                        <h3 class="mb-3">
+                            <i class="fas fa-diagnoses me-2"></i>
+                            Prediction Result
+                        </h3>
+                        <div id="mainResult">
+                            <h4 id="predictedClass">Disease Name</h4>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidenceBar" style="width: 0%;">
+                                    <span id="confidenceText">0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="disease-info" id="diseaseInfo">
+                            <h6><i class="fas fa-info-circle me-2"></i>About this condition:</h6>
+                            <p id="diseaseDescription">Detailed information will appear here.</p>
+                        </div>
+                    </div>
+
+                    <div class="all-predictions">
+                        <h5 class="mb-3">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            All Predictions
+                        </h5>
+                        <div id="allPredictionsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const uploadArea = document.getElementById('uploadArea');
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewImage = document.getElementById('previewImage');
+    const predictBtn = document.getElementById('predictBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const predictionResults = document.getElementById('predictionResults');
+    const chooseFileBtn = document.getElementById('chooseFileBtn');
+
+    let selectedFile = null;
+
+    // Disease information - Updated with English translations
+    const diseaseInfo = {
+        '1. Infectious': 'Infectious skin conditions caused by bacteria, viruses, fungi, or parasites. Common examples include impetigo, cellulitis, ringworm, and viral warts. These conditions require proper diagnosis and treatment to prevent spread.',
+        
+        '2. Eczema': 'A group of conditions that cause skin inflammation, itching, and rash. Also known as atopic dermatitis, it can be triggered by allergens, stress, or environmental factors. Treatment typically involves moisturizers and topical medications.',
+        
+        '3. Acne': 'A common skin condition that occurs when hair follicles become clogged with oil and dead skin cells. It often causes whiteheads, blackheads, or pimples, and is most common among teenagers but can affect people of all ages.',
+        
+        '4. Pigmentation': 'Conditions affecting skin pigmentation and color distribution. This includes hyperpigmentation (dark patches), hypopigmentation (light patches), vitiligo, melasma, and age spots. Can be caused by sun exposure, hormones, or skin injuries.',
+        
+        '5. Benign Tumor': 'Non-cancerous skin growths that are generally harmless. These include moles, skin tags, seborrheic keratoses, and lipomas. While typically not dangerous, monitoring for changes is recommended.',
+        
+        '6. Malignant Tumor': '⚠️ IMPORTANT: Potentially cancerous lesions that require immediate medical attention. This includes melanoma, basal cell carcinoma, and squamous cell carcinoma. Early detection and treatment are critical. Please consult a dermatologist immediately.'
+    };
+
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelect(files[0]);
+        }
+    });
+
+    // Click on upload area (but not on button)
+    uploadArea.addEventListener('click', (e) => {
+        // Only trigger if not clicking the button
+        if (e.target !== chooseFileBtn && !chooseFileBtn.contains(e.target)) {
+            imageInput.click();
+        }
+    });
+
+    // Button click handler
+    chooseFileBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent event bubbling to uploadArea
+        imageInput.click();
+    });
+
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileSelect(e.target.files[0]);
+        }
+    });
+
+    function handleFileSelect(file) {
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file.');
+            return;
+        }
+
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            previewContainer.style.display = 'block';
+            predictionResults.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    predictBtn.addEventListener('click', async () => {
+        if (!selectedFile) {
+            alert('Please select an image first.');
+            return;
+        }
+
+        showLoading(true);
+
+        const formData = new FormData();
+        formData.append('imageFile', selectedFile);
+
+        try {
+            const response = await fetch('/Prediction/PredictImage', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            showLoading(false);
+
+            if (result.success) {
+                displayResults(result);
+            } else {
+                alert('Prediction failed: ' + (result.error || 'Unknown error'));
+            }
+        } catch (error) {
+            showLoading(false);
+            alert('Error: ' + error.message);
+        }
+    });
+
+    clearBtn.addEventListener('click', () => {
+        selectedFile = null;
+        imageInput.value = '';
+        previewContainer.style.display = 'none';
+        predictionResults.style.display = 'none';
+        uploadArea.classList.remove('dragover');
+    });
+
+    function showLoading(show) {
+        loadingSpinner.style.display = show ? 'block' : 'none';
+        predictBtn.disabled = show;
+    }
+
+    function displayResults(result) {
+        // Display main result
+        document.getElementById('predictedClass').textContent = result.predicted_class;
+        document.getElementById('confidenceText').textContent = Math.round(result.confidence) + '%';
+        
+        // Animate confidence bar
+        setTimeout(() => {
+            document.getElementById('confidenceBar').style.width = result.confidence + '%';
+        }, 300);
+
+        // Show disease information
+        const diseaseDesc = diseaseInfo[result.predicted_class] || 'No information available for this condition.';
+        document.getElementById('diseaseDescription').textContent = diseaseDesc;
+
+        // Display all predictions with improved formatting
+        const allPredsList = document.getElementById('allPredictionsList');
+        allPredsList.innerHTML = '';
+
+        // Convert predictions to array and sort by confidence
+        const predictions = Object.entries(result.all_predictions)
+            .map(([className, confidence]) => ({ className, confidence }))
+            .sort((a, b) => b.confidence - a.confidence);
+
+        predictions.forEach((prediction, index) => {
+            const item = document.createElement('div');
+            item.className = 'prediction-item' + (index === 0 ? ' top-prediction' : '');
+            
+            // Add animation delay
+            item.style.animationDelay = `${index * 0.1}s`;
+            
+            item.innerHTML = `
+                <span class="prediction-name">${prediction.className}</span>
+                <span class="prediction-confidence">${prediction.confidence.toFixed(1)}%</span>
+            `;
+            
+            allPredsList.appendChild(item);
+        });
+
+        // Show results with animation
+        predictionResults.style.display = 'block';
+        
+        // Scroll to results smoothly
+        setTimeout(() => {
+            predictionResults.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'nearest' 
+            });
+        }, 500);
+    }
+</script>

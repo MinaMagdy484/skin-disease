@@ -1,0 +1,386 @@
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 0;
+        border-radius: 20px;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.1;
+    }
+
+    .team-section {
+        padding: 4rem 0;
+    }
+
+    .team-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .team-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        transition: left 0.3s ease;
+    }
+
+    .team-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .team-card:hover::before {
+        left: 0;
+    }
+
+    .student-avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .student-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .student-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .student-role {
+        color: #7f8c8d;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .student-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin: 1rem 0;
+    }
+
+    .skill-badge {
+        background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .student-social {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+    .social-btn.linkedin { background: #0077b5; }
+    .social-btn.github { background: #333; }
+    .social-btn.email { background: #ea4335; }
+
+    .social-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    .project-info {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin: 3rem 0;
+    }
+
+    .tech-stack {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .tech-item {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .tech-item:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        transform: translateY(-5px);
+    }
+
+    .tech-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #667eea;
+    }
+
+    .tech-item:hover .tech-icon {
+        color: white;
+    }
+</style>
+
+<div class="about-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">About SkinDetect AI</h1>
+                <p class="lead mb-4">
+                    An innovative AI-powered platform designed to revolutionize dermatological diagnosis 
+                    through advanced machine learning and computer vision technologies.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-brain fa-2x me-2"></i>
+                        <div>
+                            <strong>AI-Powered</strong><br>
+                            <small>Advanced Neural Networks</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shield-alt fa-2x me-2"></i>
+                        <div>
+                            <strong>Secure & Private</strong><br>
+                            <small>HIPAA Compliant</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-clock fa-2x me-2"></i>
+                        <div>
+                            <strong>Real-time</strong><br>
+                            <small>Instant Analysis</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-microscope" style="font-size: 8rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Team Section -->
+    <div class="team-section">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold text-primary">Meet Our Team</h2>
+            <p class="lead text-muted">The brilliant minds behind SkinDetect AI</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="team-card">
+                    <div class="student-avatar">
+                        <!-- Replace with actual image: <img src="~/images/student1.jpg" alt="Student 1"> -->
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="student-name">Valerie Ibraam Bushra</h3>
+                    <p class="student-role">Lead AI Developer & Data Scientist</p>
+                    <p class="text-muted">
+                        Specialized in machine learning and computer vision with focus on medical image analysis. 
+                        Passionate about leveraging AI to improve healthcare outcomes.
+                    </p>
+                    <div class="student-skills">
+                        <span class="skill-badge">Python</span>
+                        <span class="skill-badge">Deep Learning</span>
+                        <span class="skill-badge">Medical AI</span>
+                    </div>
+                    <div class="student-social">
+                        <a href="#" class="social-btn linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-btn github">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:valerie@skindetectai.com" class="social-btn email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="team-card">
+                    <div class="student-avatar">
+                        <!-- Replace with actual image: <img src="~/images/student2.jpg" alt="Student 2"> -->
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="student-name">Carol Agaiby Lotfy</h3>
+                    <p class="student-role">Full-Stack Developer & UI/UX Designer</p>
+                    <p class="text-muted">
+                        Expert in web development and user experience design. Focused on creating intuitive 
+                        interfaces that make complex AI technology accessible to everyone.
+                    </p>
+                    <div class="student-skills">
+                        <span class="skill-badge">C# .NET</span>
+                        <span class="skill-badge">UI/UX Design</span>
+                    </div>
+                    <div class="student-social">
+                        <a href="#" class="social-btn linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-btn github">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="mailto:alex@skindetectai.com" class="social-btn email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Information -->
+    <div class="project-info">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-primary">Project Overview</h3>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8">
+                <h5 class="fw-bold mb-3">Mission Statement</h5>
+                <p class="mb-4">
+                    Our mission is to democratize access to dermatological expertise through AI technology. 
+                    SkinDetect AI aims to provide preliminary skin condition analysis that can help users 
+                    make informed decisions about seeking professional medical care.
+                </p>
+                
+                <h5 class="fw-bold mb-3">Key Features</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Advanced CNN-based image classification</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Real-time skin condition analysis</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Interactive AI chatbot for medical queries</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Secure and private image processing</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Educational resources and recommendations</li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <div class="bg-light p-3 rounded">
+                    <h6 class="fw-bold">Project Statistics</h6>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Model Accuracy:</span>
+                        <strong class="text-success">91.51%</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Training Images:</span>
+                        <strong>30,000+</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Disease Categories:</span>
+                        <strong>6</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Response Time:</span>
+                        <strong class="text-primary">&lt; 3 seconds</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="text-center mb-4">
+        <h3 class="fw-bold text-primary">Technology Stack</h3>
+        <p class="text-muted">The cutting-edge technologies powering our platform</p>
+    </div>
+    
+    <div class="tech-stack">
+        <div class="tech-item">
+            <div class="tech-icon">
+                <i class="fab fa-python"></i>
+            </div>
+            <h6 class="fw-bold">Python</h6>
+            <p class="small mb-0">AI/ML Backend</p>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h6 class="fw-bold">TensorFlow</h6>
+            <p class="small mb-0">Deep Learning</p>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">
+                <i class="fab fa-microsoft"></i>
+            </div>
+            <h6 class="fw-bold">ASP.NET Core</h6>
+            <p class="small mb-0">Web Framework</p>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">
+                <i class="fab fa-bootstrap"></i>
+            </div>
+            <h6 class="fw-bold">Bootstrap 5</h6>
+            <p class="small mb-0">UI Framework</p>
+        </div>
+      
+        
+       
+    </div>
+</div>
