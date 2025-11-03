@@ -1,0 +1,179 @@
+@* filepath: e:\valeri project skin\web_project\WebApplication1\WebApplication1\Views\Admin\Dashboard.cshtml *@
+@model IEnumerable<WebApplication1.Models.Doctor>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    .admin-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .stat-label {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    .pending-doctors {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .doctor-item {
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-verify {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .btn-reject {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    <div class="admin-header">
+        <h1><i class="fas fa-user-shield me-2"></i>Admin Dashboard</h1>
+        <p>Manage users, doctors, and system settings</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-number">@ViewBag.TotalUsers</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-user-md"></i></div>
+            <div class="stat-number">@ViewBag.TotalDoctors</div>
+            <div class="stat-label">Total Doctors</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-number">@ViewBag.VerifiedDoctors</div>
+            <div class="stat-label">Verified Doctors</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-number">@ViewBag.PendingDoctors</div>
+            <div class="stat-label">Pending Verification</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-comments"></i></div>
+            <div class="stat-number">@ViewBag.TotalMessages</div>
+            <div class="stat-label">Total Messages</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-star"></i></div>
+            <div class="stat-number">@ViewBag.TotalReviews</div>
+            <div class="stat-label">Total Reviews</div>
+        </div>
+    </div>
+
+    <div class="pending-doctors">
+        <h2><i class="fas fa-hourglass-half me-2"></i>Pending Doctor Verifications</h2>
+        @if (Model.Any())
+        {
+            @foreach (var doctor in Model)
+            {
+                <div class="doctor-item">
+                    <h4>@doctor.FullName</h4>
+                    <p><strong>Specialization:</strong> @doctor.Specialization</p>
+                    <p><strong>Experience:</strong> @doctor.YearsOfExperience years</p>
+                    <p><strong>License:</strong> @doctor.LicenseNumber</p>
+                    <button class="btn-verify" onclick="verifyDoctor(@doctor.Id)">Verify</button>
+                    <button class="btn-reject" onclick="rejectDoctor(@doctor.Id)">Reject</button>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No pending verifications.</p>
+        }
+    </div>
+</div>
+
+<script>
+    function verifyDoctor(id) {
+        if (confirm('Are you sure you want to verify this doctor?')) {
+            fetch('@Url.Action("VerifyDoctor", "Admin")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `doctorId=${id}&__RequestVerificationToken=${document.querySelector('input[name="__RequestVerificationToken"]').value}`
+            })
+            .then(r => r.json())
+            .then(d => {
+                alert(d.message || d.error);
+                location.reload();
+            });
+        }
+    }
+
+    function rejectDoctor(id) {
+        if (confirm('Are you sure you want to reject and delete this doctor?')) {
+            fetch('@Url.Action("RejectDoctor", "Admin")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `doctorId=${id}&__RequestVerificationToken=${document.querySelector('input[name="__RequestVerificationToken"]').value}`
+            })
+            .then(r => r.json())
+            .then(d => {
+                alert(d.message || d.error);
+                location.reload();
+            });
+        }
+    }
+</script>
+
+@Html.AntiForgeryToken()

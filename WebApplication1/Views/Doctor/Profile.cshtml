@@ -1,0 +1,592 @@
+@* filepath: e:\valeri project skin\web_project\WebApplication1\WebApplication1\Views\Doctor\Profile.cshtml *@
+@model WebApplication1.Models.Doctor
+@{
+    ViewData["Title"] = Model.FullName + " - Profile";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+
+    .profile-content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+        align-items: start;
+        position: relative;
+        z-index: 1;
+    }
+
+    .profile-avatar {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        color: #667eea;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin: 0 auto;
+    }
+
+    .profile-info h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .profile-specialization {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+    }
+
+    .profile-stats {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .content-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title i {
+        color: #667eea;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .info-details {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .review-card {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .review-card:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .reviewer-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .reviewer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .reviewer-name {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .review-date {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+    }
+
+    .review-rating {
+        color: #f39c12;
+        font-size: 1.1rem;
+    }
+
+    .review-comment {
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .review-form {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    .rating-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .rating-input input[type="radio"] {
+        display: none;
+    }
+
+    .rating-input label {
+        font-size: 2rem;
+        color: #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .rating-input label:hover,
+    .rating-input label:hover ~ label,
+    .rating-input input[type="radio"]:checked ~ label {
+        color: #f39c12;
+    }
+
+    .rating-input {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-message {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-message:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+
+    .no-reviews {
+        text-align: center;
+        padding: 2rem;
+        color: #7f8c8d;
+    }
+
+    .no-reviews i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #e9ecef;
+    }
+
+    @@media (max-width: 768px) {
+        .profile-content {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .profile-stats {
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="profile-header">
+        <div class="profile-content">
+            <div>
+                <div class="profile-avatar">
+                    <i class="fas fa-user-md"></i>
+                </div>
+            </div>
+
+            <div class="profile-info">
+                <h1>@Model.FullName</h1>
+                <div class="profile-specialization">
+                    <i class="fas fa-stethoscope me-2"></i>@Model.Specialization
+                </div>
+
+                @{
+                    var avgRating = Model.Reviews?.Any() == true ? Model.Reviews.Average(r => r.Rating) : 0;
+                    var reviewCount = Model.Reviews?.Count() ?? 0;
+                }
+
+                <div class="review-rating">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= avgRating)
+                        {
+                            <i class="fas fa-star"></i>
+                        }
+                        else if (i - avgRating < 1)
+                        {
+                            <i class="fas fa-star-half-alt"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-star"></i>
+                        }
+                    }
+                    <span class="ms-2">@avgRating.ToString("0.0") (@reviewCount reviews)</span>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">@Model.YearsOfExperience</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">@reviewCount</span>
+                        <span class="stat-label">Reviews</span>
+                    </div>
+                </div>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div style="margin-top: 1.5rem;">
+                        <a href="@Url.Action("Index", "Message", new { userId = Model.ApplicationUserId })" class="btn-message">
+                            <i class="fas fa-comment-medical"></i>Send Message
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">
+            <i class="fas fa-info-circle"></i>About
+        </h2>
+
+        @if (!string.IsNullOrEmpty(Model.Bio))
+        {
+            <p style="color: #555; line-height: 1.8; font-size: 1.05rem;">@Model.Bio</p>
+        }
+        else
+        {
+            <p style="color: #7f8c8d;">No bio available.</p>
+        }
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">
+            <i class="fas fa-address-card"></i>Contact Information
+        </h2>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="info-details">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">@Model.Email</div>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="info-details">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">@Model.PhoneNumber</div>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.ClinicAddress))
+            {
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="info-details">
+                        <div class="info-label">Clinic Address</div>
+                        <div class="info-value">@Model.ClinicAddress</div>
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.LicenseNumber))
+            {
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div class="info-details">
+                        <div class="info-label">License Number</div>
+                        <div class="info-value">@Model.LicenseNumber</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="content-section">
+        <h2 class="section-title">
+            <i class="fas fa-star"></i>Patient Reviews
+        </h2>
+
+        @if (Model.Reviews?.Any() == true)
+        {
+            @foreach (var review in Model.Reviews.OrderByDescending(r => r.CreatedAt))
+            {
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">
+                                @review.User.FullName.Substring(0, 1).ToUpper()
+                            </div>
+                            <div>
+                                <div class="reviewer-name">@review.User.FullName</div>
+                                <div class="review-date">@review.CreatedAt.ToString("MMM dd, yyyy")</div>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= review.Rating)
+                                {
+                                    <i class="fas fa-star"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star"></i>
+                                }
+                            }
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(review.Comment))
+                    {
+                        <div class="review-comment">@review.Comment</div>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-reviews">
+                <i class="fas fa-star"></i>
+                <p>No reviews yet. Be the first to review!</p>
+            </div>
+        }
+
+        @if (User.Identity?.IsAuthenticated == true && ViewBag.HasReviewed == false)
+        {
+            <div class="review-form">
+                <h3 class="mb-3">Leave a Review</h3>
+                <form id="reviewForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Rating</label>
+                        <div class="rating-input" id="ratingInput">
+                            <input type="radio" name="rating" value="5" id="star5">
+                            <label for="star5"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" value="4" id="star4">
+                            <label for="star4"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" value="3" id="star3">
+                            <label for="star3"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" value="2" id="star2">
+                            <label for="star2"><i class="fas fa-star"></i></label>
+                            <input type="radio" name="rating" value="1" id="star1">
+                            <label for="star1"><i class="fas fa-star"></i></label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Comment</label>
+                        <textarea class="form-control" id="comment" rows="4" placeholder="Share your experience..."></textarea>
+                    </div>
+
+                    <button type="button" class="btn-submit" onclick="submitReview()">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Review
+                    </button>
+                </form>
+            </div>
+        }
+        else if (User.Identity?.IsAuthenticated == true && ViewBag.HasReviewed == true)
+        {
+            <div class="alert alert-info mt-3">
+                <i class="fas fa-info-circle me-2"></i>You have already reviewed this doctor.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-exclamation-triangle me-2"></i>Please <a href="@Url.Action("Login", "Account")">login</a> to leave a review.
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function submitReview() {
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const comment = document.getElementById('comment').value;
+
+        if (!rating) {
+            alert('Please select a rating');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('doctorId', @Model.Id);
+        formData.append('rating', rating.value);
+        formData.append('comment', comment);
+        formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+
+        fetch('@Url.Action("AddReview", "Doctor")', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Review submitted successfully!');
+                location.reload();
+            } else {
+                alert(data.error || 'Failed to submit review');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to submit review');
+        });
+    }
+</script>
+
+@@Html.AntiForgeryToken()

@@ -1,0 +1,266 @@
+@* filepath: e:\valeri project skin\web_project\WebApplication1\WebApplication1\Views\Message\Conversations.cshtml *@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    .messages-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .messages-header h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    .conversations-container {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        min-height: 500px;
+    }
+
+    .conversation-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1rem;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .conversation-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .conversation-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+
+    .conversation-item:hover::before {
+        opacity: 1;
+    }
+
+    .conversation-item.unread {
+        background: #e8f4fd;
+    }
+
+    .conversation-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        flex-shrink: 0;
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .conversation-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .conversation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .conversation-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #2c3e50;
+    }
+
+    .conversation-time {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+    }
+
+    .conversation-preview {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .conversation-item.unread .conversation-preview {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .unread-badge {
+        background: #e74c3c;
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        min-width: 28px;
+        text-align: center;
+    }
+
+    .no-conversations {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #7f8c8d;
+    }
+
+    .no-conversations i {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        color: #e9ecef;
+    }
+
+    .no-conversations h3 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .search-box {
+        margin-bottom: 1.5rem;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+
+    .search-box {
+        position: relative;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c8d;
+    }
+
+    @@media (max-width: 768px) {
+        .conversation-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+
+        .conversation-name {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="messages-header">
+        <h1><i class="fas fa-comments me-2"></i>Messages</h1>
+        <p>Your conversations</p>
+    </div>
+
+    <div class="conversations-container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search conversations..." onkeyup="filterConversations()">
+        </div>
+
+        <div id="conversationsList">
+            @if (Model.Any())
+            {
+                @foreach (var conversation in Model)
+                {
+                    <a href="@Url.Action("Index", "Message", new { userId = conversation.OtherUserId })" 
+                       class="conversation-item @(conversation.UnreadCount > 0 ? "unread" : "")"
+                       data-name="@conversation.OtherUser.FullName.ToLower()">
+                        <div class="conversation-avatar">
+                            @conversation.OtherUser.FullName.Substring(0, 1).ToUpper()
+                        </div>
+                        <div class="conversation-content">
+                            <div class="conversation-header">
+                                <span class="conversation-name">@conversation.OtherUser.FullName</span>
+                                <span class="conversation-time">@conversation.LastMessage.SentAt.ToString("MMM dd, hh:mm tt")</span>
+                            </div>
+                            <div class="conversation-preview">
+                                @if (conversation.LastMessage.SenderId == ViewBag.CurrentUserId)
+                                {
+                                    <span>You: </span>
+                                }
+                                @conversation.LastMessage.Content
+                            </div>
+                        </div>
+                        @if (conversation.UnreadCount > 0)
+                        {
+                            <span class="unread-badge">@conversation.UnreadCount</span>
+                        }
+                    </a>
+                }
+            }
+            else
+            {
+                <div class="no-conversations">
+                    <i class="fas fa-comment-slash"></i>
+                    <h3>No Conversations Yet</h3>
+                    <p>Start a conversation with a doctor to get started</p>
+                    <a href="@Url.Action("List", "Doctor")" class="btn btn-primary mt-3">
+                        <i class="fas fa-user-md me-2"></i>Find Doctors
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterConversations() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const conversations = document.querySelectorAll('.conversation-item');
+
+        conversations.forEach(conv => {
+            const name = conv.getAttribute('data-name');
+            if (name.includes(searchValue)) {
+                conv.style.display = 'flex';
+            } else {
+                conv.style.display = 'none';
+            }
+        });
+    }
+</script>

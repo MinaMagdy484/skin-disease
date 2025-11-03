@@ -1,0 +1,358 @@
+@* filepath: e:\valeri project skin\web_project\WebApplication1\WebApplication1\Views\Account\Register.cshtml *@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+    .register-container {
+        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .register-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        max-width: 1000px;
+        margin: 0 auto;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .register-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .register-header h2 {
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    .account-type-selector {
+        display: flex;
+        gap: 1rem;
+        margin: 2rem;
+        padding: 0;
+    }
+
+    .account-type {
+        flex: 1;
+        padding: 2rem;
+        border: 3px solid #e9ecef;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        background: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .account-type::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 0;
+    }
+
+    .account-type > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .account-type:hover {
+        border-color: #667eea;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+    }
+
+    .account-type.active {
+        border-color: #667eea;
+        color: white;
+    }
+
+    .account-type.active::before {
+        opacity: 1;
+    }
+
+    .account-type i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .account-type h4 {
+        margin-bottom: 0.5rem;
+    }
+
+    .register-form {
+        padding: 2rem;
+        display: none;
+    }
+
+    .register-form.active {
+        display: block;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .btn-register {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 0.875rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .login-link a {
+        color: #667eea;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+
+    .alert {
+        border-radius: 10px;
+        margin: 1.5rem;
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <h2><i class="fas fa-user-plus me-2"></i>Create Your Account</h2>
+            <p>Join our healthcare community today</p>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["Error"]
+            </div>
+        }
+
+        <div class="account-type-selector">
+            <div class="account-type active" id="userType" onclick="selectType('user')">
+                <i class="fas fa-user"></i>
+                <h4>Patient</h4>
+                <p>Get AI diagnosis and consult doctors</p>
+            </div>
+            <div class="account-type" id="doctorType" onclick="selectType('doctor')">
+                <i class="fas fa-user-md"></i>
+                <h4>Doctor</h4>
+                <p>Provide consultations and reviews</p>
+            </div>
+        </div>
+
+        <!-- User Registration Form -->
+        <form asp-action="RegisterUser" method="post" class="register-form active" id="userForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-user me-1"></i>Full Name</label>
+                    <input type="text" class="form-control" name="fullName" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-envelope me-1"></i>Email Address</label>
+                    <input type="email" class="form-control" name="email" placeholder="john@example.com" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-phone me-1"></i>Phone Number</label>
+                    <input type="tel" class="form-control" name="phoneNumber" placeholder="+1234567890" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-calendar me-1"></i>Date of Birth</label>
+                    <input type="date" class="form-control" name="dateOfBirth">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-lock me-1"></i>Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Enter strong password" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-map-marker-alt me-1"></i>Address</label>
+                <textarea class="form-control" name="address" rows="2" placeholder="Your address"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-register">
+                <i class="fas fa-check-circle me-2"></i>Register as Patient
+            </button>
+
+            <div class="login-link">
+                <p>Already have an account? <a asp-action="Login">Sign In</a></p>
+            </div>
+        </form>
+
+        <!-- Doctor Registration Form -->
+        <form asp-action="RegisterDoctor" method="post" class="register-form" id="doctorForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-user-md me-1"></i>Full Name</label>
+                    <input type="text" class="form-control" name="fullName" placeholder="Dr. John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-envelope me-1"></i>Email Address</label>
+                    <input type="email" class="form-control" name="email" placeholder="doctor@example.com" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-phone me-1"></i>Phone Number</label>
+                    <input type="tel" class="form-control" name="phoneNumber" placeholder="+1234567890" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-stethoscope me-1"></i>Specialization</label>
+                    <select class="form-select" name="specialization" required>
+                        <option value="">Select Specialization</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="General Practice">General Practice</option>
+                        <option value="Cosmetic Dermatology">Cosmetic Dermatology</option>
+                        <option value="Pediatric Dermatology">Pediatric Dermatology</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-award me-1"></i>Years of Experience</label>
+                    <input type="number" class="form-control" name="yearsOfExperience" placeholder="5" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-id-card me-1"></i>License Number</label>
+                    <input type="text" class="form-control" name="licenseNumber" placeholder="MED123456" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-lock me-1"></i>Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Enter strong password" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-clinic-medical me-1"></i>Clinic Address</label>
+                <textarea class="form-control" name="clinicAddress" rows="2" placeholder="Clinic location" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-info-circle me-1"></i>Professional Bio</label>
+                <textarea class="form-control" name="bio" rows="3" placeholder="Brief professional bio"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-register">
+                <i class="fas fa-check-circle me-2"></i>Register as Doctor
+            </button>
+
+            <div class="login-link">
+                <p>Already have an account? <a asp-action="Login">Sign In</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function selectType(type) {
+        if (type === 'user') {
+            document.getElementById('userType').classList.add('active');
+            document.getElementById('doctorType').classList.remove('active');
+            document.getElementById('userForm').classList.add('active');
+            document.getElementById('doctorForm').classList.remove('active');
+        } else {
+            document.getElementById('doctorType').classList.add('active');
+            document.getElementById('userType').classList.remove('active');
+            document.getElementById('doctorForm').classList.add('active');
+            document.getElementById('userForm').classList.remove('active');
+        }
+    }
+</script>

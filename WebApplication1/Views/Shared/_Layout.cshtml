@@ -1,30 +1,31 @@
-﻿<!DOCTYPE html>
+﻿@* filepath: e:\valeri project skin\web_project\WebApplication1\WebApplication1\Views\Shared\_Layout.cshtml *@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<WebApplication1.Models.ApplicationUser> SignInManager
+@inject UserManager<WebApplication1.Models.ApplicationUser> UserManager
+@{
+    var currentUser = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;
+    var isDoctor = false;
+    WebApplication1.Models.Doctor? doctor = null;
+
+    if (currentUser != null)
+    {
+        var context = Context.RequestServices.GetRequiredService<WebApplication1.Models.ApplicationDbContext>();
+        doctor = context.Doctors.FirstOrDefault(d => d.ApplicationUserId == currentUser.Id);
+        isDoctor = doctor != null;
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SkinDetect AI</title>
-    
-    <!-- Enhanced CSS Libraries -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>@ViewData["Title"] - Skin Disease Detection</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            --light-bg: #f8f9fa;
-            --shadow-light: 0 2px 10px rgba(0,0,0,0.1);
-            --shadow-medium: 0 4px 20px rgba(0,0,0,0.15);
-            --shadow-heavy: 0 8px 30px rgba(0,0,0,0.2);
-            --border-radius: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -32,101 +33,183 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            color: #2c3e50;
         }
 
-        /* Enhanced Navbar */
+        /* Modern Navbar */
         .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(20px);
-            border: none !important;
-            box-shadow: var(--shadow-light);
+            background: white !important;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             padding: 1rem 0;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
             font-weight: 700;
             font-size: 1.5rem;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-decoration: none;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .navbar-brand:hover {
-            transform: scale(1.05);
-            transition: var(--transition);
+        .navbar-brand i {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
         }
 
         .nav-link {
+            color: #2c3e50 !important;
             font-weight: 500;
             padding: 0.5rem 1rem !important;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-gradient);
-            transition: var(--transition);
-            z-index: -1;
+            margin: 0 0.25rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .nav-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white !important;
             transform: translateY(-2px);
         }
 
-        .nav-link:hover::before {
-            left: 0;
-        }
-
         .nav-link.active {
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white !important;
-            box-shadow: var(--shadow-medium);
         }
 
-        /* Main Content */
-        .container {
-            max-width: 1400px;
+        .navbar-nav {
+            align-items: center;
         }
 
-        main {
-            min-height: calc(100vh - 200px);
-            padding: 2rem 0;
-        }
-
-        /* Enhanced Footer */
-        .footer {
-            background: var(--dark-gradient);
-            color: white;
-            padding: 3rem 0 2rem;
-            margin-top: 4rem;
+        /* User Dropdown */
+        .user-dropdown {
             position: relative;
-            overflow: hidden;
         }
 
-        .footer::before {
-            content: '';
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-item {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            margin: 0.5rem 0;
+            border-top: 2px solid #f8f9fa;
+        }
+
+        /* Auth Buttons */
+        .btn-login {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-login:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Notification Badge */
+        .notification-badge {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
         }
 
         .footer-content {
@@ -136,20 +219,22 @@
             margin-bottom: 2rem;
         }
 
-        .footer-section h5 {
-            color: #00f2fe;
+        .footer-section h4 {
             margin-bottom: 1rem;
             font-weight: 600;
         }
 
-        .footer-section p, .footer-section a {
-            color: #bdc3c7;
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            transition: var(--transition);
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
         }
 
         .footer-section a:hover {
-            color: #00f2fe;
+            color: white;
             transform: translateX(5px);
         }
 
@@ -159,196 +244,317 @@
             margin-top: 1rem;
         }
 
-        .social-links a {
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transition: var(--transition);
+            color: white;
+            transition: all 0.3s ease;
         }
 
-        .social-links a:hover {
-            background: var(--success-gradient);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
+        .social-link:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateY(-5px);
         }
 
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 2rem;
+            padding-top: 1rem;
             text-align: center;
-            color: #95a5a6;
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        /* Responsive Design */
-        @@media (max-width: 768px) {
-            .navbar-brand {
-                font-size: 1.2rem;
+        /* Mobile responsive */
+        @@media (max-width: 991px) {
+            .navbar-collapse {
+                background: white;
+                padding: 1rem;
+                border-radius: 15px;
+                margin-top: 1rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             .nav-link {
-                margin: 0.2rem 0;
+                margin: 0.25rem 0;
             }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                text-align: center;
+
+            .navbar-nav {
+                align-items: flex-start;
             }
         }
 
-        /* Loading Animation */
-        .page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
+        /* Page Container */
+        .page-container {
+            min-height: calc(100vh - 200px);
+            padding: 2rem 0;
         }
 
-        .loader-content {
-            text-align: center;
-            color: white;
+        /* Smooth page transitions */
+        main {
+            animation: fadeIn 0.5s ease-in;
         }
 
-        .loader-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        @@keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
     </style>
 </head>
 <body>
-    <!-- Page Loader -->
-    <div class="page-loader" id="pageLoader">
-        <div class="loader-content">
-            <div class="loader-spinner"></div>
-            <h4>Loading SkinDetect AI...</h4>
-        </div>
-    </div>
-
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="fas fa-microscope me-2"></i>
-                    MycoScan
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>SkinCare AI</span>
                 </a>
-                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="fas fa-home me-1"></i>Home
+                                <i class="fas fa-home"></i>
+                                <span>Home</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Prediction" asp-action="Index">
-                                <i class="fas fa-brain me-1"></i>AI Diagnosis
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Chat" asp-action="Index">
-                                <i class="fas fa-robot me-1"></i>Chatbot
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">
-                                <i class="fas fa-users me-1"></i>About Us
-                            </a>
-                        </li>
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Prediction" asp-action="Index">
+                                    <i class="fas fa-microscope"></i>
+                                    <span>AI Diagnosis</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Chat" asp-action="Index">
+                                    <i class="fas fa-robot"></i>
+                                    <span>AI Assistant</span>
+                                </a>
+                            </li>
+
+                            @if (!isDoctor)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="List">
+                                        <i class="fas fa-user-md"></i>
+                                        <span>Find Doctors</span>
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Message" asp-action="Index">
+                                    <i class="fas fa-comments"></i>
+                                    <span>Messages</span>
+                                </a>
+                            </li>
+
+                            @if (isDoctor)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Dashboard">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        <span>Dashboard</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Doctor" asp-action="Profile" asp-route-id="@doctor.Id">
+                                        <i class="fas fa-id-badge"></i>
+                                        <span>My Profile</span>
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="nav-item dropdown user-dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    <div class="user-avatar">
+                                        @currentUser.FullName.Substring(0, 1).ToUpper()
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <span class="dropdown-item-text">
+                                            <strong>@currentUser.FullName</strong>
+                                            <br />
+                                            <small class="text-muted">@currentUser.Email</small>
+                                            @if (isDoctor)
+                                            {
+                                                <br />
+                                                <span class="badge bg-primary mt-1">Doctor</span>
+                                            }
+                                        </span>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    @if (isDoctor)
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Doctor" asp-action="Dashboard">
+                                                <i class="fas fa-tachometer-alt"></i>
+                                                <span>Dashboard</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Doctor" asp-action="Profile" asp-route-id="@doctor.Id">
+                                                <i class="fas fa-user-circle"></i>
+                                                <span>My Profile</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Doctor" asp-action="List">
+                                                <i class="fas fa-user-md"></i>
+                                                <span>Find Doctors</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Message" asp-action="Index">
+                                            <i class="fas fa-envelope"></i>
+                                            <span>Messages</span>
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                            <span>Logout</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>About</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>Contact</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item ms-2">
+                                <a class="btn-login" asp-controller="Account" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <span>Login</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item ms-2">
+                                <a class="btn-register" asp-controller="Account" asp-action="Register">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Register</span>
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main role="main" style="margin-top: 100px;">
-        @RenderBody()
-    </main>
+    <div class="page-container">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
 
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h5><i class="fas fa-microscope me-2"></i>SkinDetect AI</h5>
-                    <p>Advanced AI-powered skin disease detection system using state-of-the-art machine learning technology to provide accurate dermatological analysis.</p>
+                    <h4><i class="fas fa-heartbeat me-2"></i>SkinCare AI</h4>
+                    <p>Advanced AI-powered skin disease detection and consultation platform. Get instant diagnosis and connect with certified dermatologists.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h5><i class="fas fa-link me-2"></i>Quick Links</h5>
-                    <p><a asp-controller="Home" asp-action="Index">Home</a></p>
-                    <p><a asp-controller="Prediction" asp-action="Index">AI Diagnosis</a></p>
-                    <p><a asp-controller="Chat" asp-action="Index">Chatbot</a></p>
-                    <p><a asp-controller="Home" asp-action="About">About Us</a></p>
+                    <h4>Quick Links</h4>
+                    <a asp-controller="Home" asp-action="Index">Home</a>
+                    <a asp-controller="Home" asp-action="About">About Us</a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-controller="Prediction" asp-action="Predict">AI Diagnosis</a>
+                        <a asp-controller="Doctor" asp-action="List">Find Doctors</a>
+                    }
+                    <a asp-controller="Home" asp-action="Contact">Contact</a>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h5><i class="fas fa-shield-alt me-2"></i>Privacy & Security</h5>
-                    <p><a asp-controller="Home" asp-action="Privacy">Privacy Policy</a></p>
-                    <p><a href="#">Terms of Service</a></p>
-                    <p><a href="#">Data Protection</a></p>
-                    <p><a href="#">Medical Disclaimer</a></p>
+                    <h4>Services</h4>
+                    <a href="#">Skin Disease Detection</a>
+                    <a href="#">AI Chatbot Consultation</a>
+                    <a href="#">Doctor Consultation</a>
+                    <a href="#">Treatment Recommendations</a>
+                    <a href="#">Health Monitoring</a>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h5><i class="fas fa-envelope me-2"></i>Contact Info</h5>
-                    <p><i class="fas fa-map-marker-alt me-2"></i>University Campus</p>
-                    <p><i class="fas fa-phone me-2"></i>+20 100 724 9754</p>
-                    <p><i class="fas fa-envelope me-2"></i>valeri.ibraam@gmail.com</p>
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>123 Medical St, Health City</p>
+                    <p><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope me-2"></i>info@skincareai.com</p>
+                    <p><i class="fas fa-clock me-2"></i>24/7 Available</p>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
-                <p>&copy; 2025 SkinDetect AI. All rights reserved. | Developed with ❤️ for medical innovation</p>
+                <p>&copy; @DateTime.Now.Year SkinCare AI. All rights reserved. | <a href="#" style="color: rgba(255, 255, 255, 0.6);">Privacy Policy</a> | <a href="#" style="color: rgba(255, 255, 255, 0.6);">Terms of Service</a></p>
             </div>
         </div>
     </footer>
 
-    <!-- Enhanced Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    
-    <script>
-        // Page loader
-        window.addEventListener('load', function() {
-            const loader = document.getElementById('pageLoader');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 500);
-            }, 1000);
-        });
 
+    <script>
         // Active nav link highlighting
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname;
@@ -359,23 +565,32 @@
                     link.classList.add('active');
                 }
             });
-        });
 
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
         });
+
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
     </script>
-    
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
