@@ -1,0 +1,231 @@
+@{
+    ViewData["Title"] = "Purchase Predictions";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+
+    .payment-container {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        margin: 2rem auto;
+        max-width: 900px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .plan-card {
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s;
+        cursor: pointer;
+        height: 100%;
+    }
+
+    .plan-card:hover {
+        transform: translateY(-10px);
+        border-color: #007bff;
+        box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+    }
+
+    .plan-card.selected {
+        border-color: #28a745;
+        background: #f0fff4;
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+    }
+
+    .plan-price {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #007bff;
+        margin: 1rem 0;
+    }
+
+    .current-balance {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .payment-form {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-top: 2rem;
+        display: none;
+    }
+
+    .card-input {
+        background: white;
+        border: 2px solid #dee2e6;
+        border-radius: 10px;
+        padding: 0.75rem;
+        font-size: 1.1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+</style>
+
+<div class="container-fluid p-4">
+    <div class="payment-container">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-credit-card me-2"></i>
+            Purchase Prediction Credits
+        </h1>
+
+        <div class="current-balance">
+            <h4>Your Current Balance</h4>
+            <h2 id="currentBalance">@ViewBag.CurrentPredictions Predictions</h2>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="plan-card" data-plan="basic" data-price="10" data-credits="5">
+                    <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                    <h3>Basic</h3>
+                    <div class="plan-price">$10</div>
+                    <h4>5 Predictions</h4>
+                    <p class="text-muted">Perfect for trying out</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="plan-card" data-plan="standard" data-price="25" data-credits="15">
+                    <i class="fas fa-gem fa-3x text-primary mb-3"></i>
+                    <h3>Standard</h3>
+                    <div class="plan-price">$25</div>
+                    <h4>15 Predictions</h4>
+                    <p class="text-muted">Most popular choice</p>
+                    <span class="badge bg-success">Best Value</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="plan-card" data-plan="premium" data-price="50" data-credits="40">
+                    <i class="fas fa-crown fa-3x text-warning mb-3"></i>
+                    <h3>Premium</h3>
+                    <div class="plan-price">$50</div>
+                    <h4>40 Predictions</h4>
+                    <p class="text-muted">Maximum savings</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-form" id="paymentForm">
+            <h4 class="mb-4">Payment Details</h4>
+            <p class="text-muted mb-3">Test Card: 4242 4242 4242 4242</p>
+            
+            <input type="text" class="card-input" id="cardNumber" placeholder="Card Number" maxlength="19">
+            <div class="row">
+                <div class="col-6">
+                    <input type="text" class="card-input" id="expiry" placeholder="MM/YY" maxlength="5">
+                </div>
+                <div class="col-6">
+                    <input type="text" class="card-input" id="cvv" placeholder="CVV" maxlength="3">
+                </div>
+            </div>
+            <input type="text" class="card-input" id="cardName" placeholder="Cardholder Name">
+            
+            <button type="button" class="btn btn-success btn-lg w-100 mt-3" id="payBtn">
+                <i class="fas fa-lock me-2"></i>Complete Payment
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedPlan = null;
+
+    // Plan selection
+    document.querySelectorAll('.plan-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            selectedPlan = {
+                name: this.dataset.plan,
+                price: this.dataset.price,
+                credits: parseInt(this.dataset.credits)
+            };
+            
+            document.getElementById('paymentForm').style.display = 'block';
+            document.getElementById('paymentForm').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // Format card number
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s/g, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        e.target.value = formattedValue;
+    });
+
+    // Format expiry
+    document.getElementById('expiry').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            e.target.value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        } else {
+            e.target.value = value;
+        }
+    });
+
+    // Payment button
+    document.getElementById('payBtn').addEventListener('click', async function() {
+        if (!selectedPlan) {
+            alert('Please select a plan');
+            return;
+        }
+
+        const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+        const expiry = document.getElementById('expiry').value;
+        const cvv = document.getElementById('cvv').value;
+        const cardName = document.getElementById('cardName').value;
+
+        if (!cardNumber || !expiry || !cvv || !cardName) {
+            alert('Please fill all card details');
+            return;
+        }
+
+        // Fake validation - only accept test card
+        if (cardNumber !== '4242424242424242') {
+            alert('Invalid card number. Use test card: 4242 4242 4242 4242');
+            return;
+        }
+
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+
+        try {
+            const response = await fetch('/Payment/ProcessPayment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    planName: selectedPlan.name,
+                    credits: selectedPlan.credits,
+                    amount: selectedPlan.price
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`Payment Successful! You now have ${result.newBalance} predictions.`);
+                location.reload();
+            } else {
+                alert('Payment failed: ' + result.error);
+            }
+        } catch (error) {
+            alert('Error processing payment');
+        }
+
+        this.disabled = false;
+        this.innerHTML = '<i class="fas fa-lock me-2"></i>Complete Payment';
+    });
+</script>

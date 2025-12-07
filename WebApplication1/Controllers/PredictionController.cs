@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.IO;
+using Microsoft.AspNetCore.Identity;
+using WebApplication1.Models;
+using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
@@ -9,18 +12,32 @@ namespace WebApplication1.Controllers
         private readonly ILogger<PredictionController> _logger;
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PredictionController(ILogger<PredictionController> logger, IWebHostEnvironment environment, IConfiguration configuration)
+        public PredictionController(ILogger<PredictionController> logger, IWebHostEnvironment environment, IConfiguration configuration, UserManager<ApplicationUser> UserManager)
         {
             _logger = logger;
             _environment = environment;
             _configuration = configuration;
+            _userManager = UserManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+                  var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    if (userId != null)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        ViewBag.RemainingPredictions = user?.NumberOfPredictionValid ?? 0;
+    }
+    else
+    {
+        ViewBag.RemainingPredictions = 0;
+    }
+    
+    return View();
         }
+        
 
         [HttpPost]
         public async Task<IActionResult> PredictImage(IFormFile imageFile)
@@ -28,6 +45,21 @@ namespace WebApplication1.Controllers
             if (imageFile == null || imageFile.Length == 0)
             {
                 return Json(new { success = false, error = "Please select an image file." });
+            }
+
+            // Check user credits
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId != null)
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user.NumberOfPredictionValid <= 0)
+                {
+                    return Json(new { success = false, error = "No predictions remaining. Please purchase more credits.", needPayment = true });
+                }
+
+                // Deduct one prediction
+                user.NumberOfPredictionValid--;
+                await _userManager.UpdateAsync(user);
             }
 
             try
@@ -48,7 +80,7 @@ namespace WebApplication1.Controllers
                     await imageFile.CopyToAsync(memoryStream);
                     imageData = memoryStream.ToArray();
                 }
-
+                
                 // Call prediction service
                 var result = await CallPredictionService(imageData);
                 return Json(result);
@@ -58,6 +90,7 @@ namespace WebApplication1.Controllers
                 _logger.LogError(ex, "Error during image prediction");
                 return Json(new { success = false, error = "An error occurred during prediction. Please try again." });
             }
+            
         }
 
         private async Task<object> CallPredictionService(byte[] imageData)
@@ -129,5 +162,7 @@ namespace WebApplication1.Controllers
             
             return translations.ContainsKey(turkishName) ? translations[turkishName] : turkishName;
         }
+
+        
     }
 }

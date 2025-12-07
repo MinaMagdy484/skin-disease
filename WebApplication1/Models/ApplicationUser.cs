@@ -11,6 +11,7 @@ namespace WebApplication1.Models
 
         [StringLength(200)]
         public string? Address { get; set; }
+        public int NumberOfPredictionValid { get; set; } = 0;   
 
         public DateTime? DateOfBirth { get; set; }
 
@@ -21,5 +22,6 @@ namespace WebApplication1.Models
 
         // Navigation properties for Reviews
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
     }
 }
